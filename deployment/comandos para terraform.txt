@@ -1,0 +1,12 @@
+ACCOUNT_ID=$(aws sts get-caller-identity | jq -r ".Account")
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin "$ACCOUNT_ID.dkr.ecr.us-east-2.amazonaws.com"
+
+aws sts get-caller-identity --profile default --region us-east-2
+
+docker tag a5c823201bfe8755b8c411ffd45ba1d3b6661b4783620a6f4144e70f45c0c637 676206932076.dkr.ecr.us-east-2.amazonaws.com/hola_mundo_cloud-repo:latest
+
+docker push 676206932076.dkr.ecr.us-east-2.amazonaws.com/hola_mundo_cloud-repo:latest
+
+ssh-add ~/.ssh/HolaMundoCloudKey.pem
+chmod 400 HolaMundoCloudKey.pem
+ssh -v -i HolaMundoCloudKey.pem ec2-user@ec2-18-220-41-16.us-east-2.compute.amazonaws.com
